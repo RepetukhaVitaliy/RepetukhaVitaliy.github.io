@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Runner Game</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body{
+            margin: 0;
+            padding: 0;
+            background: #6666554;
+            }            
+            #renderCanvas {
+            z-index: 30;
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            background: #ffffff;
+            overflow: hidden;
+            image-rendering: optimizeSpeed;
+            -ms-interpolation-mode: nearest-neighbor;
+            /* Disable longpress */
+            -webkit-touch-callout: none;
+            }
+   	</style>
+        
+        <!--  loader amimation -->
+        <script>
+	    // change the default namespace for the CreateJS libraries:
+	    var createjscc = createjscc||{};
+	    var createjs = createjscc;
+        </script>
+        <script src="libs/easeljs-0.8.1.min.js"></script>
+        <script src="libs/tweenjs-0.6.1.min.js"></script>
+        <script src="libs/movieclip-0.8.1.min.js"></script>
+        <script src="libs/preloadjs-0.6.2.combined.js"></script>
+        <script src="js/preloader.js"></script>
+        <!--  loader amimation -->
+        
+        
+        <link rel="stylesheet" type="text/css" href="css/game.css">
+        <link rel="stylesheet" type="text/css" href="css/elements_rules.css">
+        
+        <script src="libs/pixi_v4.js"></script>
+        <script src="libs/prototype.js"></script>
+        <script src="libs/stats.min.js"></script>
+        <script src="libs/dat.gui.js"></script>
+        <script src="libs/jquery-3.1.1.min.js"></script>
+        <script src="libs/sha256.js"></script>
+        
+        
+        
+        
+        
+        <!--  to DEMO -->
+        <link rel="stylesheet" type="text/css" href="css_/fonts.css">
+        
+
+                <!--  to DELETE -->
+                <link rel="shortcut icon" href="food.ico">
+
+                <script src="js/level/M.js"></script>
+                <script src="js/level/V.js"></script>
+                <script src="js/level/3d/V_3d.js"></script>
+                <script src="js/level/3d/V_3d_mob.js"></script>
+                <script src="js/level/C.js"></script>
+
+                <script src="js/game/M.js"></script>
+                <script src="js/game/V.js"></script>
+                <script src="js/game/C.js"></script>
+
+                <script src="js/quiz/M.js"></script>
+                <script src="js/quiz/V.js"></script>
+                <script src="js/quiz/C.js"></script>
+
+                <script src="js/Sounds.js"></script>
+
+                <script src="js/AjaxCont.js"></script>
+
+                <script src="js/app.js"></script>  
+                <!--  to DELETE -->
+       
+                
+                
+    <!-- to BUILD  
+       <script src="js/game.min.js"></script> 
+    -->
+    
+    
+    
+       <script src="js/prizes_slider.js"></script>
+        
+    </head>
+    <body>
+    
+    <div id="temp header" width="100%" height="100" backgroundcolor="red">
+       
+    </div>
+        
+  <!-- game div -->         
+    <div id="game_cont">
+        
+<!--  ------------------------------------------------ PAGES: ------------------------------------------------  -->
+
+<script>
+      // loader animation:
+      var canvas, stage, exportRoot;
+      
+      function initLoaderAnimation() {
+      	canvas = document.getElementById("canvasloader");
+      	imagescc = imagescc||{};
+      
+        // to work - must be div with id="hiddenloading"
+      	var loader = new createjscc.LoadQueue(false);
+      	loader.addEventListener("fileload", handleFileLoad);
+      	loader.addEventListener("complete", handleComplete);
+      	loader.loadManifest(libcc.properties.manifest);
+        
+        $j('#pages_cont').find('#loader').show();
+      }
+      
+      function handleFileLoad(evt) {
+      	if (evt.item.type == "image") { imagescc[evt.item.id] = evt.result; }
+      }
+      
+      function handleComplete(evt) {
+      	exportRoot = new libcc.preloader();
+      
+      	stage = new createjscc.Stage(canvas);
+      	stage.addChild(exportRoot);
+      	stage.update();
+      
+      	createjscc.Ticker.setFPS(libcc.properties.fps);
+      	createjscc.Ticker.addEventListener("tick", stage);
+       
+        // loading and first animation loop - complete:
+        setTimeout(function(){
+            
+            if(onAnimationStepComplete != null){
+               onAnimationStepComplete();
+            }
+        },13000);
+        
+        $j('#prepreloader').hide();
+      }
+      
+      function destroyLoaderAnimation(){
+          createjscc.Ticker.removeEventListener("tick", stage);
+          canvas = null;
+          stage = null;
+          exportRoot = null;
+      }
+      
+      onAnimationStepComplete = null;
+    </script>
+
+    <div id="pages_cont" class="g_pagefon" tabindex="0" style="position:absolute;z-index: 31; overflow: hidden;">
+<!--   LOADER:   -->
+<div id="loader" style="display:none; " class="sizefit" >
+    <table width="100%" height="100%">
+        <tr>
+            <td>
+                <div width='100%' align="center">
+                    <canvas id="canvasloader" width="500" height="220" class="absolute_centered"></canvas>
+                    <img id="mobileloaderimg" style="display:none;" src="assets/ui/mobile_loader.png"></img>
+                    <p id="prepreloader" class="g_basictext absolute_centered">ЗАГРУЗКА</p>
+                    <p id="bar_percents" class="g_basictext" style="display:none; font-size: 10px;">%</p>
+                </div>
+                <div id="hiddenloading" style="position:absolute;">
+                    
+                </div>
+            </td>
+        </tr>
+        </table>
+</div>
+<!--   LOADER.    -->  
+
+<!--   HOME:   -->
+<div id="home" class="g_mainfon sizefit" style="display: none;">
+    <table width="100%" height="100%" border="0">
+        <tr>
+            <td width="100%" align="center">
+                <div class="scaleifmobile er_hometitle" >
+                 <br><br>
+                 <h1 class='g_title1'>NEXTRUN:</h1>
+                    <br><span class="emptydist" style="width:80px;"></span>
+                    <h1 class='g_title2' style="display:inline-block;position:relative;top: -28px;">яркий забег</h1>
+                    <p class='g_description' style="    position: relative;top: -20px;">
+                        Беги и собирай капсулы на пути<br>к ярким эмоциям!
+                    </p>
+                    <br><br>
+                    <button  id="play" class="g_button">НАЧАТЬ ИГРУ</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button  id="invite" class="g_button">ПРИГЛАСИТЬ ДРУГА</button>
+                    <p class='g_plus_ballov' style="position:relative; left: 300px; top: 10px;">+100 БАЛЛОВ</p>
+                    <br><br>
+                    <div id="checkrules" class="g_check_off"  style="display: inline-block;position:relative; top: -7px; margin-right: 3px;"></div>
+                    <p class='g_agreed' style="display:inline-block;">
+                        Начиная игру я принимаю правила игры и даю подтверждение<br>на отображение продукта в игре
+                    </p>
+                    <br>
+                    <br>
+                    <a href="https://nextlook.ru/rules#nextrun_rules" class="g_title1" style="text-decoration:none;color:white;font-size: 20px;" target="_blank" align="center">
+                                Полные правила игры <img src="assets/ui/link_str.png" style="position:relative;top:3px;left: 11px;">
+                            </a>
+                     <div width='50%' border="1px" class="justify_cont" style="width:80%">
+                     <button  id="rate" class="g_iconbutton justify_element"  align="center"><img src="assets/ui/main_icon_rates.png">РЕЙТИНГ</button>
+                     <button  id="rules" class="g_iconbutton justify_element"  align="center"><img src="assets/ui/main_icon_rules.png">КАК ИГРАТЬ?</button>
+                     <button  id="sound" class="g_iconbutton justify_element"  align="center"><div class="g_soundM_on"></div>ЗВУК</button>
+                     <!-- <button  id="sound_turn" class="g_iconbutton justify_element"  align="center"><div class="g_soundM_on"></div>музыка</button> -->
+                     <span class="justify_stretch"></span>
+                    </div>
+                    <img src="assets/ui/main_right_pic_mob.png" class="er_main_mob_pic">
+                </div>
+                
+                <div class="scaleifmobile er_homeprizes" >
+                    <br>
+                    <p class="g_prizelist_title" style="    position: relative;top: 25px;left: -35px;">Копи баллы и получай яркие<br>призы от <a href="/about" target="_blank">Next Violet Mix</a>!</p>
+                    <br>
+                    <div class="g_prizelist" style="position: relative; text-align: left;">
+                        <div style="position: relative; top: 30px;">
+                           <h5>Гарантированный приз<br>за 500 баллов</h5>
+                           <p>200 руб. на мобильный<br>телефон</p>
+                        </div>
+                        <div style="position: relative; top: 22px;">
+                            <h5>1 место</h5>
+                           <p>Сертификат Lamoda 15 000 руб.</p>
+                        </div>
+                        <div style="position: relative;     top: 35px;left: -22px;">
+                            <h5>2-3 место</h5>
+                           <p>Сертификат Lamoda 3 000 руб.</p>
+                        </div>
+                        <div  style="position: relative;top: 40px;left: -70px;">
+                           <h5>4-10 место</h5>
+                           <p>Сертификат Sunlight 1 000 руб.</p>  
+                        </div>
+                        <img src="assets/ui/main_center_pic.png" style="position: absolute; left: -400px;     top:  -212px; pointer-events:none;">
+                        <img src="assets/ui/main_left_pic.png" style="position: absolute;     left: -390px; top: -120px; pointer-events:none;">
+                    </div>
+                    <br><br>
+                </div>
+                <span class="emptydist" style="width:250px"></span>
+                <div class="er_homeprizes_mob">
+                    <div id="prizessicons_mob" style="position:relative; width: 550px; height: 255px;  left: -20px;">
+                        <img src="assets/ui/main_slider_line.png" style="position:absolute;     top: 17px;left: -225px; pointer-events: none;">
+                        <div id="zoomicon" style="width:109px;height: 110px; position: absolute;     top: 140px;left: 220px;">
+                            <img src="assets/ui/main_slider_icon1_b.png">
+                        </div>
+                        <div id="icon2" style="width:83px;height: 85px; position: absolute;     top: 131px;left: 370px;">
+                            <div style="position: absolute;top: -55px;width: 150px;left: -35px;"><h5>...</h5></div>
+                            <img src="assets/ui/main_slider_icon2_s.png">
+                        </div>
+                        <div id="icon3" style="width:83px;height: 85px; position: absolute;     top: 100px;left: 465px;">
+                            <div style="position: absolute;top: -55px;width: 150px;left: -35px;"><h5>...</h5></div>
+                            <img src="assets/ui/main_slider_icon3_s.png">
+                        </div>
+                        <div id="icon4" style="width:83px;height: 85px; position: absolute;top: 50px;left: 550px;">
+                            <div style="position: absolute;top: -55px;width: 150px;left: -35px;"><h5>...</h5></div>
+                            <img src="assets/ui/main_slider_icon4_s.png">
+                        </div>
+                         <div id="prizestitle_mob" style="position:absolute; left: -50px;top: 75px;">...</div>
+                    </div>
+                    <div class="justify_cont" style="max-width: 800px;">
+                        <div id="prizes_str1_mob" class="justify_element" style="margin-left: 20px;">
+                            <img src="assets/ui/main_slider_str1.png">
+                        </div>
+                        <div id="prizestext_mob_style">                            
+                            <br>
+                            <div id="prizestext_mob" class="justify_element">...</div>
+                        </div>
+                        <div id="prizes_str2_mob" class="justify_element" style="margin-right: 20px;">
+                            <img src="assets/ui/main_slider_str2.png">
+                        </div>
+                        <span class="justify_stretch"></span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </div>
+<!--   HOME.    -->        
+
+<!--   LEVELS CHOOSE:   -->
+<div id="choose_level"  class="g_levelsfon sizefit" style="display: none; ">
+    <table width="100%" height="100%" border="0">
+        <tr>
+            <td width="100%" align="center">
+                
+                <div class="er_levelchoosediv1 scaleifmobile" >
+                    <p class="g_titletext1">Выбери,</p>
+                    <p class="g_titletext2">
+                        куда отправиться<br>в погоне</p>
+                    <p class="g_titletext2" style="position: relative; left: 85px;">
+                        за эмоциями</p>
+                    <br><br><br>
+                </div>
+                <span class="emptydist" style="width:5px"></span>
+              <div class="er_levelchoosediv2 scaleifmobile" >
+                  <img src="assets/ui/levels_pic.png" style="position:absolute;    top: -150px;left: -200px;">
+                <div id="level1" class="g_level" style="position: absolute;     top: -9px;left: 41px;" align="center" border=0>
+                                
+                    <div  id="start" class="g_level_button1"></div>
+                    <div style="display:inline-block;text-align: left;position: relative; top: -30px;">
+                                <h2>Кино</h2>
+                                <h5>Лучший результат уровня:</h5>
+                                <h4 id="best" > ... </h4>
+                    </div>
+                </div>
+               <div id="level2" class="g_level" style="position: absolute;    left: 60px;top: 138px;" align="center" border=0>
+                                
+                                <div  id="start" class="g_level_button2"></div>
+                                <div style="display:inline-block;text-align: left;position: relative; top: -30px;">
+                                <h2>Парк</h2>
+                                <h5>Лучший результат уровня:</h5>
+                                <h4 id="best" > ... </h4>
+                                 </div>
+                </div>
+                
+                <div id="level3" class="g_level" style="position: absolute;     top: 285px;left: 20px" align="center" border=0>
+                                
+                                <div  id="start" class="g_level_button3"></div>
+                                <div style="display:inline-block;text-align: left;position: relative; top: -30px;">
+                                <h2>Ресторан</h2>
+                                <h5>Лучший результат уровня:</h5>
+                                <h4 id="best" > ... </h4>
+                                 </div>
+                </div>
+                </div>
+                
+                 <div class="g_backbutton">
+                    <img id="back" class="g_iconbutton" src="assets/ui/page_back.png">
+                </div>
+            </td>
+        </tr>
+        </td>
+        </tr>
+    </table>
+</div>
+<!--   LEVELS CHOOSE.    -->  
+
+<!--   FINISH:    -->
+<div id="finish_page" class="finish_page_fon1 sizefit" style="display: none; " >
+     <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                <br><br>
+                <div class="er_finishdiv1 scaleifmobile" >
+                     <div id="text1" style="display:none;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 45px;display: inline-block;margin-left: 8px;">Уровень пройден!</p>
+                            <p  class="g_titletext2" style="line-height: 90%;font-size: 35px;">Новых впечатлений<br>хватит надолго!</p>
+                    </div>
+                    <div id="text2" style="display:block;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 45px;">Поздравляем!</p>
+                            <p class="g_titletext2" style="line-height: 90%;font-size: 35px;">Заряд ярких эмоций получен</p>
+                            <p class="g_titletext2" style="line-height: 90%;font-size: 35px;">Ты молодец!</p>                            
+                    </div>
+                    <div id="text3" style="display:none;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 45px;margin-left: 8px;">Уровень пройден!</p>                            
+                            <p  class="g_titletext2" style="line-height: 90%;font-size: 35px;">Тобой были открыты новые<br>грани вкуса!</p>
+                    </div>
+                    
+                    <div id="text_q" style="display:none;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 45px;display: inline-block;">Ура!</p>
+                            <span class="emptydist" style="width:20px;"></span>
+                            <p class="g_titletext2" style="line-height: 90%;font-size: 45px;display: inline-block;">Тест пройден!</p>
+                    </div>
+                <br>
+                 <div style="display:inline-block;    position: relative;">
+                     <div style="position:absolute;     top: 10px; left: -85px;">
+                           <img id="starimage" src="assets/ui/finish_star.png"></img>
+                    </div>
+                     <p id="score" class='g_titletext1 er_finish_score'>
+                        ...
+                    </p>
+                    <p id="bonuse" class='g_titletext1 er_finish_bonuse'>
+                        ...
+                    </p>
+                    <p id="best" class='g_basictext er_finish_best'>
+                        ...
+                    </p>
+                    <p id="rate" class='g_basictext er_finish_rate'>
+                        ...
+                    </p>
+                </div>
+                <br><br><br>
+                
+                    <div id="test" class="g_finish_quiz"></div>
+                   <div id="replay" class="g_finish_replay"></div>
+                    <div id="home" class="g_finish_home"></div>
+               
+                </div>
+              
+                <span class="emptydist" style="width:400px;">    
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   FINISH.    -->
+
+</div>
+<!-- ------------------------------------------------ PAGES. ------------------------------------------------  -->
+
+
+<!-- ------------------------------------------------ LEVEL HUD:  ------------------------------------------------ -->
+<div id="levelui" class="" style="display:none;position:absolute;z-index: 32; overflow: hidden;">
+
+    
+    <!-- background-image: url('assets/hud/guide_hud.png'); -->
+    <div id="hud1" class="hudfon3 er_hud1">
+        <div style="position:absolute;     top: 55px;left: 76px;">
+                   <p id="time_hud" class="hudtimetxt" >00:00 </p>
+        </div>
+        
+        <canvas id="circle" width="145" height="145" style="position:absolute; top: 39px; left: 50px;"></canvas>
+        
+        <div style="position:absolute; top: 140px;left: 90px;">
+            <img src="assets/hud/images/star.png" border="0" align="left"></img>
+            <p id="score_hud" class="hudpointstxt" style="position: relative; top: -20px;left: 24px;">0</p>
+        </div>
+        <div style="position:absolute; display: none; top: 125px; left: 170px;">
+            <img src="assets/hud/images/products.png" border="0"></img>
+            <p id="products_hud" class="hudpointstxt" style="position: relative; top:-50px; left: 60px;">0</p>
+        </div>
+    </div>
+     <div id="leveltouch" style="position:absolute;  width: 100%; height: 100%;"></div>
+       <div id="hud2" class="er_hud2">
+         <button id="pause" class="hudbutton" border="0"><img id="pause" src="assets/hud/images/pause.png" border="0"></img></button>
+         <button id="info" class="hudbutton" border="0"><img src="assets/hud/images/info.png" border="0"></img></button>
+         <button id="sound" class="hudbutton" border="0"><div></div></button>
+         <br><img id="esc_for_pause_img" src="assets/hud/esc.png" border="0"></img>
+       </div>
+    
+    <div id="newchar" style="display: none; position:absolute;">
+        <img src="assets/ui/new_char_hint.png">
+    </div>
+</div>
+<!-- ------------------------------------------------ LEVEL HUD.  ------------------------------------------------ -->
+
+<!-- ------------------------------------------------ SLIDE POPUPS: ------------------------------------------------  -->
+<div id="slide_popups_cont" align="right" style="display: none;position:absolute;z-index: 33; overflow: hidden;">
+       
+    <!--   RATINGS:   -->
+     <div id="rate_popup" class="g_slider_fon"  style="display: none;">
+         <table width="100%" height="100%" border=0>
+        <tr>
+            <td align="center" width="100%">
+                <div border="1px" class="er_ratehead">
+                    <br>
+                    <p class="g_titletext1" style="display: inline; font-size: 55px;">Рейтинг</p>
+                    <p class="g_titletext2" style="display: inline; font-size: 55px;">участников</p>
+                    <div class="g_rate_date" style="display: inline-block;">
+                        <img src="assets/ui/rate_star.png"style="position: relative;right:5px; top: 5px;">
+                        <div  style="display: inline-block;">ИТОГИ КОНКУРСА БУДУТ ПОДВЕДЕНЫ<br>26 СЕНТЯБРЯ 2017 ГОДА!</div>
+                    </div>
+                <br><br><br><br><br><br>
+                     <div style="display: inline-block;text-align: center;">
+                        <p class="g_titletext1" style="font-size:30px;">Как заработать больше баллов?</p>
+                       <br><br>
+                        <button  id="howto" class="g_button g_button_s">УЗНАТЬ</button>
+                     </div>
+                <br><br><br>
+                 </div>
+                
+                <div align="center" border="1px" class="er_ratelist">
+                    
+                    <div class="justify_cont" style="width:380px; position: relative; left: -10px; top: 30px;">
+                        <!--<p class="g_rate_table_titles justify_element">приз</p>-->
+                        <p class="g_rate_table_titles justify_element">участник</p>
+                        <p class="g_rate_table_titles justify_element">баллы</p>
+                        <span class="justify_stretch"></span>
+                    </div>
+                    
+                    <div id="ratescroll" style="overflow-y: scroll; width:100%; height:200px; text-align: center;">
+                        
+                        <div id="toptenblock" style="width:100%"></div>
+                     </div>
+                    <img src="assets/ui/rates_line.png">
+                    <br>
+                    <br>
+                    <div id="myposblock" style="width:100%; height:120px; text-align: center;">
+                       <p class='g_rate_table_titles' style="margin:0;">МОЯ ПОЗИЦИЯ:</p>
+                       <div id="nearthree" style="width:100%"></div>
+                </div>
+                </div>
+                
+                <div class="g_backbutton">
+                    <img id="close" class="g_iconbutton" src="assets/ui/page_back.png">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   RATINGS:    -->
+       
+
+<!--   RULES:   -->
+    <div id="rules_popup" class="g_slider_fon"   style="display: none;">
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width='100%' align="center">
+                
+                
+                <div class="scaleifmobile er_ruleshead" >
+                    <br><br><br><br><br><br><br><br><br>
+                    <p  class="g_titletext2" style="display: inline;">Как</p>
+                    <span class="emptydist" style="width:12px"></span>
+                    <p  class="g_titletext1" style="display: inline;">играть?</p>
+                </div>
+                <span class="emptydist" style="width:50px"></span>
+                <div class="scaleifmobile er_rulestext" >
+                    <div class="g_ul">
+                        
+                        <h2>Игра —</h2><p>NEXTRUN: яркий забег» состоит из трех уровней. Ты можешь пройти их в любой последовательности. Количество попыток на уровень неограниченно, но только лучший результат уровня пойдет в рейтинг! 
+Твоя задача — набрать как можно больше баллов! Чтобы добежать до цели, у тебя всего одна минута. Собирай продуктовые иконки, капсулы и часики.</p>
+                      
+                      <br><h2>Препятствия —</h2><p>Столкновение с препятствием замедляет тебя и отнимает 5 сек игрового времени – избегай их! </p>
+                      <br><h2>Управление —</h2><p>Меняй дорожку с помощью стрелок влево/вправо, прыгай с помощью стрелки вверх.</p>
+                      <br><h2>Бонусы —</h2><p>Как получить дополнительные баллы? Пройди тест о новом <a href="/about" target="_blank">Next Violet Mix</a>  в конце каждого уровня. Каждый вопрос – <b>50 баллов!</b>
+                      <br><br>
+                      <a href="/user/invite?game" target="_blank">Зови</a> в игру подруг* и получи до <b>1000 баллов!</b>
+                      
+                      <br><br><br>
+                      <a href="/rules" class="g_titletext2" style="text-decoration:none;color:white;font-size: 15px;" target="_blank" align="center">ПОЛНЫЕ ПРАВИЛА КОНКУРСА
+                            <img src="assets/ui/link_str.png" style="position:relative;top:3px;left: 11px;"></img></a>
+                      </p>
+                    </div>
+                </div>
+                <br><br><br>
+                <div class="g_agreed">
+                    *Совершеннолетний курильщик, 100 баллов за каждую подругу, зарегистрировавшуюся и подтвердившую возраст (максимум 10). Баллы даются только за подруг, которых ты пригласила из меню игры.
+                </div>
+                
+                <div class="g_backbutton">
+                    <img id="close" class="g_iconbutton" src="assets/ui/page_back.png">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   RULES.    -->
+
+
+<!--   HOWTO:   -->
+    <div id="howto_popup" class="g_howto_fon"   style="display: none;">
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width='100%' align="center">
+                
+                
+                <div class="scaleifmobile er_howtohead" >
+                    <p class="g_titletext2" style="font-size:55px;">Как заработать</p>
+                        <p class="g_titletext1" style="margin-left:50px;font-size:55px;">больше баллов?</p>
+                    
+                    <br><br><br><br><br>
+                    
+                    
+                </div>
+                <span class="emptydist" style="width:50px"></span>
+                <div class="scaleifmobile er_howtolist">
+                    <img src="assets/ui/howto_list.png" style="position:absolute;top: -210px;left: -300px;">
+                </div>
+            <div class="g_backbutton">
+                    <img id="close" class="g_iconbutton" src="assets/ui/page_back.png">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   HOWTO.    -->
+
+<!--   INVITE:   -->
+    <div id="invite_popup" class="g_slider_fon" style="display: none;">
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                
+                <div class="er_inviteleftpic">
+                    <img src="assets/ui/invite_left_pic.png" style="position:absolute; top: 0px;left: -60px;">
+                </div>
+                
+                <div class="scaleifmobile er_invitetext" >
+                    <p class='g_titletext1'>Зачем мне приглашать</p>
+                    <p class="g_titletext2" style="margin-right:80px;">подруг* в игру?</p>
+                
+                    <br><br>
+                    <div style="width:100%;">
+                        <p class='g_basictext'>
+                             За приглашение подруг* ты можешь получить <b>до 1000 дополнительных баллов</b> в рейтинг! Чтобы баллы были добавлены, нужно приглашать подруг по кнопке ниже
+                        </p>
+                    </div>
+                    <br><br>
+                   <a href="/user/invite?game" target="_blank"><button  class="g_button g_button_s">ПРИГЛАСИТЬ</button></a>
+                </div>
+                <br><br>
+                <div style="width:100%;bottom: 21px;">
+                    <p class='g_basictext g_basictext-middle'>
+                         *Совершеннолетний курильщик, 100 баллов за каждую подругу, зарегистрировавшуюся и подтвердившую возраст (максимум 10). Баллы даются только за подруг, которых ты пригласила из меню игры.
+                    </p>
+                </div>
+                <div class="g_backbutton">
+                    <img id="back" class="g_iconbutton" src="assets/ui/page_back.png">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   INVITE.    -->     
+
+</div>
+<!-- ------------------------------------------------ SLIDE POPUPS. ------------------------------------------------  -->
+
+
+<!-- ------------------------------------------------ CENTER POPUPS: ------------------------------------------------  -->
+    <div id="popups_cont" style="display: none;position:absolute;z-index: 34; overflow: hidden;">
+        
+        
+<!--   INSTRUCTION:   -->
+     <div id="instructions_popup" class="g_infofon sizefit" style="display: none; position:relative; " >
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+     
+                <div class="er_instrucitons"  >
+                   <div  class="er_instrucitons_cont">
+                      <img id="picture">
+                      <div id="invite" class="er_instrucitons_invite">
+                         <a href="/user/invite?game" target="_blank">Зови</a>
+                      </div>
+                      <div id="nextvioletmix" class="er_instrucitons_nextvioletmix">
+                          <a href="/about" target="_blank" >Next Violet Mix</a>
+                      </div> 
+                   
+                    
+                      <div class="er_howto_buttons">
+                        <button  id="play" class="g_button g_button_s" style="display:none; margin-right: 170px;">ИГРАТЬ</button>
+                        <button  id="close" class="g_button g_button_s" style="display:none;">ЗАКРЫТЬ</button>
+                        <button  id="next" class="g_button g_button_s" >ДАЛЬШЕ</button>
+                        <span class="emptydist" style="width:50px"></span>
+                        <div id="skip" href="" class="g_buttonSemiIt" style="display: inline-block; color:white;font-size: 15px;">ПРОПУСТИТЬ И НАЧАТЬ ИГРАТЬ
+                            <img src="assets/ui/link_str.png" style="position:relative;top:3px;left: 11px;"></img>
+                        </div>
+                    </div>
+                </div>      
+                </div>  
+                <div class="g_backbutton">
+                    <img id="back" class="g_iconbutton" src="assets/ui/page_back.png">
+                </div>
+                <div class="er_instructions_current">
+                    <p id="ins_curr">4</p><p id="ins_total">/4</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   INSTRUCTION.    -->
+
+<!--   PHONE:   -->
+<div id="phone_popup" class="g_popupfon sizefit" style="display: none; position: relative;">
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                
+                    <div class="scaleifmobile er_phonepic" >
+                        <img id="picture" style="position:relative;top:600px;left: 60px;width:616px;height: 744px;"></img>
+                    </div>
+                     <span class="emptydist" style="width:12px"></span>
+                    <div  class="scaleifmobile er_phonetext" >
+                        
+                        <div id="text1" style="display:none;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 38px;">Скоро свидание, остается<br>мало времени</p>
+                            <p class="g_titletext2"  style="line-height: 90%;font-size: 32px;">Беги и собирай капсулы, чтобы получить новые впечатления с новым<br><a href="/about" target="_blank">NEXT Violet Mix</a> с капсулой со вкусом лесных ягод!</p>
+                        </div>
+                        <div id="text2" style="display:none;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 38px;">Собирай капсулы</p>
+                            <p class="g_titletext2"  style="line-height: 90%;font-size: 32px;">и получай новые яркие эмоции<br>с <a href="/about" target="_blank">NEXT Violet Mix</a>!</p>
+                        </div>
+                        <div id="text3" style="display:none;">
+                            <p class="g_titletext1" style="line-height: 90%;font-size: 38px;">По пути в ресторан<br>собирай капсулы,</p>
+                            <p class="g_titletext2"  style="line-height: 90%;font-size: 32px;">чтобы открыть для себя яркий ягодный вкус нового<br><a href="/about" target="_blank">NEXT Violet Mix</a>!</p>
+                        </div>
+                        
+                        <br><br>
+                        <button  id="play" class="g_button">НАЧАТЬ ИГРУ</button>
+                    </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   PHONE.    -->
+
+
+<!--   COUNT:   -->
+<div id="count_popup" class="g_popupfon sizefit" style="display: none; " >
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                  <div class="scaleifmobile" id="timercount">
+                       <p class="g_timercount">3</p>
+                  </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   COUNT.    -->
+
+<!--   PAUSE:   -->
+<div id="pause_popup" class="g_popupfon sizefit" style="display: none; " >
+    <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                <div class="scaleifmobile er_pausediv">
+                    <p class='g_title1' style="font-size: 50px;">
+                        <img src="assets/ui/pause_icon.png" style="position: relative;top: 4px;">&nbsp;&nbsp;&nbsp;ПАУЗА
+                    </p>
+                    <br><br><br><br>
+                    <button  id="rezume" class="g_button" align="center">ПРОДОЛЖИТЬ</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button   id="home" class="g_button" align="center">ГЛАВНОЕ МЕНЮ</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   PAUSE.    -->
+
+<!--   PRODUCT INFO:   -->
+    <div id="info_popup" class="g_darkfon sizefit" style="display: none; ">
+    <table width="100%" height="100%" border=0>
+        <tr>
+          <td width="100%" align="center">
+               
+               <div class="scaleifmobile">
+                <div class="absolute_centered" style="width:300px;height:300px;">
+                    <div class="absolute_centered">
+                      <img id="picture"></img>
+                      <div class="er_infopopup_button">
+                        <button  id="rezume" class="g_button g_button_s" align="center">ЗАКРЫТЬ</button>
+                        <p id="keyboard_hint" class="g_basictext" style="margin: 0;">Или нажми Enter, чтобы продолжить игру</p>
+                      <div>
+                    </div>
+                </div>
+               </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   PRODUCT INFO.    -->
+
+<!--   QIUZ new:    -->
+<div id="quiz_play_popup" class="quiz_page_fon sizefit" style="display: none; " >
+     <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                 
+                  <div class="scaleifmobile er_quizdiv" >
+                   <br><br>  
+                   <img id="quizicon" src="assets/ui/quiz_icon_noicon.png" class="er_quizicon">
+                           <p id="question1" class="g_titletext1" style="line-height: 90%;font-size: 34px;">Вопрос</p>
+                           <p id="question2" class="g_titletext2" style="line-height: 90%;font-size: 28px;">Вопрос</p>
+                            <br>
+                            <div style="display:inline-block; width: 220px; vertical-align: top;">
+                                <button  id="answer1" class="g_quiz_button"><div id="__truefalse"></div><div id="__img"></div><p></p></button><br>
+                                  <button  id="answer2" class="g_quiz_button"><div id="__truefalse"></div><div id="__img"></div><p></p></button>
+                            </div>
+                            <div style="display:inline-block; width: 220px; vertical-align: top;">
+                                  <button  id="answer3" class="g_quiz_button"><div id="__truefalse"></div><div id="__img"></div><p></p></button><br>
+                                  <button  id="answer4" class="g_quiz_button"><div id="__truefalse"></div><div id="__img"></div><p></p></button>
+                            </div>
+                            
+                            <br><br><br><br><br>
+                            <div id="number" class="g_quiz_number er_quiznumber" >
+                                <h1>1</h1>
+                                <h2>/10</h2>
+                            </div>
+                            <span class="emptydist" style="width:47px"></span>
+                            <div style="display:inline-block;vertical-align: top;">
+                                <button  id="next" class="g_button g_button_s" align="center">ОТВЕТИТЬ</button>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <p id="textspecs" class="g_basictext g_basictext-middle"></p>
+                </div>   
+                 <span class="emptydist" style="width:400px;"></span>
+                 <div id="block" style="position:absolute; width: 100%; top: 0px;left: 0px; height: 100%; display: none;"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--   QIUZ new.    -->
+
+
+<!--   QIUZ:    -->
+<div id="quiz_intro_popup" style="display: none; " class="sizefit" >
+     <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                <div style="width:80%;">
+                <p class='g_titletext1'>
+                    Продуктовые вопросы
+                </p>
+            </div>
+                <br><br>
+            <div style="width:80%;">
+                <p class='g_basictext' align="left">
+                    Ты можешь повысить свою позицию
+в рейтинге, нужно ответить на 3
+вопроса
+Перед тобой 3 вопроса и 15 секунд
+на ответ, для правильного ответа
+есть только 1 попытка.
+                </p>
+            </div>
+          
+          <button  id="play" class="g_button g_button2">ПРОДОЛЖИТЬ</button>
+          <br><br>
+          <button  id="back" class="g_button g_button2 buttonsmalltext">ВЕРНУТЬСЯ НАЗАД</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="quiz_rezult_popup" style="display: none; " class="sizefit" >
+     <table width="100%" height="100%" border=0>
+        <tr>
+            <td width="100%" align="center">
+                <div style="width:80%;">
+                <p class='g_titletext1'>
+                    Результаты
+                </p>
+            </div>
+                <br><br>
+            <div style="width:80%;">
+                   <img src="assets/loc1/product.png" border="1" width="80" height="80" align="right"></img>
+                <p class='g_basictext' align="left">
+                  Положительный или отрицательный
+текст (в зависимости от
+результатата)
+                </p>
+                <p class='g_basictext' align="left" id="trueanswers">
+                Правильных ответов: 2
+                </p>
+                <p class='g_basictext' align="left" id="points">
+                Заработано дополнительных баллов: 100
+                </p>
+            </div>
+      
+                <button  id="close" class="g_button g_button2">ПРОДОЛЖИТЬ</button><br>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="quiz_alert_popup" style="display: none; " class="sizefit" >
+     <table width="100%" height="100%" border=0>
+        <tr>
+             <td width="100%" align="center">
+                <div style="width:80%;">
+                <p class='g_titletext1'>
+                    !
+                </p>
+            </div>
+                <br><br>
+             <div style="width:80%;">
+                <p class='g_basictext' align="center">
+                 нет собранных фактов о продукте
+                </p>
+            </div>
+           
+                <br><br>
+                
+                <button  id="close" class="g_button g_button2" align="center">ПРОДОЛЖИТЬ</button><br>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!--   QIUZ.    -->
+
+    </div>
+<!-- ------------------------------------------------ CENTER POPUPS. ------------------------------------------------  -->
+
+<div id="game_system_alerts" class="er_game_system_alerts">
+    
+    <div id="sound_enable_popup" class="sound_enable_fon" style="position: absolute; display: none; width:100%; height:100%; z-index: 35;">
+        <div class="absolute_centered" style="text-align: center;">
+            <p class='g_description' style="position: relative;">
+                Играть со звуком?
+            </p>
+            <br>
+            <button  id="snd_yes" class="g_button" style="min-width: 50px;">Да</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button  id="snd_no" class="g_button" style="min-width: 50px;">Нет</button>
+        </div>
+    </div>
+
+    <div id="webglblock" class="g_pagefon" style="position: absolute; display: none; width:100%; height:100%; z-index: 35;">
+    <table width="100%" height="100%">
+       <tr>
+           <td>
+               <div width='100%' align="center">
+                   <p  id="webglstatus" class="g_basictext" style="position:relative; top:0px;"></p>
+                   <p  id="browsername" class="g_basictext" style="position:relative; top:0px;"></p>
+                   <p  id="browserversion" class="g_basictext" style="position:relative; top:0px;"></p>
+                   <p class="g_basictext" style="position:relative; top:0px;">...для запуска игры используйте новые версии браузеров с поддержкой webGL</p>
+               </div>
+           </td>
+       </tr>
+       </table>
+      </div>
+
+
+     <div id="mobileblock" class="g_pagefon" style="position: absolute; display: none; width:100%; height:100%; z-index: 36;">
+     <table width="100%" height="100%">
+        <tr>
+            <td>
+                <div width='100%' align="center">
+                    <p class="g_basictext" style="position:relative; top:0px;">...игра на мобильных устройствах временно не доступна</p>
+                </div>
+            </td>
+        </tr>
+        </table>
+       </div>
+
+
+     <div id="connectionblock" class="g_pagefon" style="position: absolute; display: none; width:100%; height:100%; z-index: 36; ">
+     <table width="100%" height="100%">
+        <tr>
+            <td>
+                <div width='100%' align="center">
+                    <p class="g_basictext" style="position:relative; top:0px;">...нет связи с сервером, проверьте  интернет соединение! </p>
+                    <button id="close" class="g_button">Продолжить</button>
+                </div>
+            </td>
+        </tr>
+      </table>
+      </div>
+
+    <div id="prerender" class="g_pagefon" style="position: absolute; display: none; width:100%; height:100%; z-index: 37; ">
+                    <p class="g_basictext" style="position:relative; top:0px;">...pre-render pages</p>
+    </div>
+    
+ </div>
+</div> 
+<div id="rotate_plz" class="g_rotate_plz_fon" style="touch-action: none; position: absolute;top:0px; display: none; width:100%; height:100%; z-index: 38; ">
+        <div class="absolute_centered">
+            <img src="assets/ui/rotate_plz.png"></img>
+        </div>
+    </div>
+<!-- close game div -->
+
+<div id="temp footer" width="100%" bgcolor="red"></div>
+
+<!-- <div class="b-footer__label tempfon1" style="width:100%;height:50vh;">this is test HW. game.min.js - prevent touch event on $('.b-footer__label')[0] </div>-->
+
+
+</body>
+
+</html>
