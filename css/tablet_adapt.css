@@ -1,0 +1,314 @@
+#instructions_popup a {
+    font: normal 19px/1 "ProximaNovaRegular",sans-serif;
+} 
+
+/* home */
+#pages_cont div#home {
+    /* max-height: 800px; */
+    overflow-x: hidden;
+}
+
+#pages_cont #home .er_hometitle{
+     -webkit-transform-origin: top;
+    transform-origin: top;
+    display: block;
+    width: 720px;
+    position: relative;
+}
+
+#pages_cont #home .er_homeprizes{
+     -webkit-transform-origin: top;
+    transform-origin: top;
+    display: block;
+    width: 500px;
+    top: 50px;
+}
+
+
+.g_backbutton{
+    position: absolute;
+    top:15px;
+    left:15px;    
+}
+
+
+/* choose */
+#choose_level > table > tbody > tr > td > div.er_levelchoosediv1 {
+    /* width: 300px; */
+    margin-left: 0px;
+    margin-right: 0px;
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    -ms-transform: scale(0.85, 0.85);
+-webkit-transform: scale(0.85, 0.85);
+transform: scale(0.85, 0.85);
+}
+
+#choose_level > table > tbody > tr > td > div.er_levelchoosediv2 {
+    width: 500px;
+    margin-left: -150px;
+    margin-right: -150px;
+    -ms-transform: scale(0.85, 0.85);
+    -webkit-transform: scale(0.85, 0.85);
+    transform: scale(0.85, 0.85);
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+    top: auto;
+    margin-top: -30px;
+}
+
+
+/* instructions */
+/*
+#instructions_popup .er_instrucitons {
+     -ms-transform:scale(0.8, 0.8) translate(-53%, -32%);
+    -webkit-transform: scale(0.8, 0.8) translate(-53%, -32%);
+    transform:scale(0.8, 0.8) translate(-50%, -32%); 
+    -webkit-transform-origin: top left; 
+    transform-origin: top left;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+*/
+.g_infofon{
+    background: url(../assets/ui/mob/howto_fon.jpg) center center no-repeat;;
+    -webkit-background-size: auto;
+    -moz-background-size: auto;
+    -o-background-size: auto;
+    background-size: auto;
+    
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.er_instrucitons_cont{
+    display: inline-block;
+    position:relative;
+    top:0px;
+    width: 560px;
+    height: 800px;
+}
+#instructions_popup #picture {
+    position: absolute;
+    left: -436px;
+    top: -150px;
+}
+
+.er_instrucitons_invite{
+    display:none;
+        position: absolute;
+    left: 87px;
+    top: 255px;
+}
+
+.er_instrucitons_nextvioletmix{
+    display:none;
+        position: absolute;
+    left: 275px;
+    top: 182px;
+}
+
+.er_instructions_current{
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    display: none;
+}
+
+.er_howto_buttons {
+    width: 560px;
+    position: absolute;
+    top: 630px;
+    left: 0px;
+}
+#instructions_popup #play {
+    margin-left: 170px;
+}
+
+
+/* phone popup */
+#phone_popup > table > tbody > tr > td > div.er_phonepic {
+     -ms-transform:scale(0.8, 0.8);
+    -webkit-transform: scale(0.8, 0.8);
+    transform:scale(0.8, 0.8); 
+       margin-right: -30px;
+       margin-left: -230px;
+       position: relative;
+}
+
+#phone_popup > table > tbody > tr > td > div.er_phonetext {
+      -ms-transform:scale(0.8, 0.8);
+      -webkit-transform: scale(0.8, 0.8);
+      transform:scale(0.8, 0.8); 
+       margin-left: -100px;
+       margin-right: -200px;
+       height: 400px;
+}
+
+
+/* count */
+#count_popup #timercount p{
+    /* height: initial; */
+    margin: auto;
+}
+
+
+/* level HUD */
+#levelui #hud1 {
+  right: -60px;
+  top: -30px;
+  -ms-transform: scale(0.85, 0.85);
+    -webkit-transform: scale(0.85, 0.85);
+    transform: scale(0.85, 0.85);
+}
+
+#levelui #hud2 {
+  top: 145px;/* bottom: 50px; */right: 18px;
+   -ms-transform: scale(0.85, 0.85);
+    -webkit-transform: scale(0.85, 0.85);
+    transform: scale(0.85, 0.85);
+  }
+
+
+/* invite */
+#invite_popup > table > tbody > tr > td > div.er_inviteleftpic {
+    margin-left: -20px;
+    margin-right: -10px;
+    top: 12px;
+}
+
+#invite_popup > table > tbody > tr > td > div.er_invitetext {
+    /* margin-left: -100px; */
+    margin-right: -200px;
+    width: 450px;
+    text-align: left;
+}
+
+/* rates */
+#rate_popup > table > tbody > tr > td > div.er_ratehead {
+    text-align: center;
+    top: 50px;
+    margin-top: 50px;
+}
+
+#rate_popup #toptenblock p{
+    margin-bottom:0;
+    margin-top:10px;
+}
+
+/* rules */
+
+#rules_popup > table > tbody > tr > td > div.er_rulestext p {
+    width: 500px;
+    font-size: 20px;
+}
+
+#rules_popup > table > tbody > tr > td > div.er_rulestext h2 {
+    font-size: 20px;
+    top:25px;
+}
+
+#rules_popup > table > tbody > tr > td > div.er_rulestext {
+    
+}
+
+#rules_popup > table > tbody > tr > td > div.er_ruleshead {
+    margin-top: -100px;
+}
+
+/* howto */
+#howto_popup > table > tbody > tr > td > div.er_howtohead {
+    margin-right: 20px;
+    margin-left: -160px;
+
+    width: 300px;
+    /* font-size: 15px; */
+    /* top: 10px; */
+    margin-top: 20px;
+}
+
+#howto_popup > table > tbody > tr > td > div.er_howtolist {
+    margin-left: -130px;
+    margin-right: -100px;
+    top: -30px;
+}
+
+/* finish */
+#finish_page > table > tbody > tr > td > div {
+    margin-top: -60px;
+    -webkit-transform-origin: left;
+    transform-origin: left;
+    position: relative;
+}
+
+#finish_page > table > tbody > tr > td > div img{
+    margin-top: -40px;
+}
+
+#finish_page #starimage{
+    display: none;
+}
+
+#game_cont #finish_page {
+    background-size: 1650px 837px;
+}
+
+
+#finish_page #score {
+    font-size: 22px;
+    line-height:120%
+}
+
+#finish_page #bonuse {
+    font-size: 22px;
+    
+}
+
+#finish_page #best {
+    font-size: 20px;
+
+}
+
+#finish_page #rate {
+    font-size: 20px;
+
+}
+
+/* quiz */
+div#quiz_play_popup {
+    background-size: 1650px 837px;
+}
+
+#quiz_play_popup > table > tbody > tr > td > div.er_quizdiv {
+    -webkit-transform-origin: left;
+    transform-origin: left;
+    position: relative;
+}
+
+#quiz_play_popup #quizicon {
+    top: -50px;
+    left: -5px;
+    width: 60px;
+    /* height: 80px; */
+}
+
+#quiz_play_popup #next{   
+   /* width:1px; */
+   position: relative;
+   top: -40px;
+}
+
+#quiz_play_popup #number{
+   top: -40px;
+}
+
+/* info popup */
+#info_popup > table > tbody > tr > td > div {
+   
+}
+
+.er_main_mob_pic{
+    position: absolute;
+    top: -180px;
+    right: -180px;
+}
